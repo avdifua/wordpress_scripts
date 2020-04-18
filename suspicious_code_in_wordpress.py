@@ -12,7 +12,7 @@ def count_time(func):
     def wrapped():
         str_time = time.time()
         obj = func()
-        print('Время выполнения:', time.time() - str_time)
+        print('Lead time:', time.time() - str_time)
         return obj
 
     return wrapped
@@ -44,40 +44,40 @@ def search_path():
     default_path_nt = ['D:\\jetbrains\\tmp']
     default_path_nix = ['/var/www/']
     if os.name == 'nt':
-        sp = input(f'Где ищем?\nпример: {default_path_nt[0]}\nИли нажмите "Enter" '
-                   f'для выбора пути по умолчанию {default_path_nt[0]}\n')
+        sp = input(f'Where are we looking?\nexample: {default_path_nt[0]}\nOr press "Enter" '
+                   f'to select the default path {default_path_nt[0]}\n')
         if os.path.isdir(sp):
             return sp
         elif len(sp) <= 0:
             return default_path_nt[0]
         else:
-            print('Такой директории не существует!')
+            print('This directory does not exist!')
             sys.exit()
     else:
-        sp = input(f'Где ищем?\nпример: /var/www/\nИли нажмите "Enter" '
-                   f'для выбора пути по умолчанию {default_path_nix[0]}\n')
+        sp = input(f'Where are we looking?\nexample: /var/www/\nOr press "Enter" '
+                   f'to select the default path {default_path_nix[0]}\n')
         if os.path.isdir(sp):
             return sp
         elif len(sp) <= 0:
             return default_path_nix[0]
         else:
-            print('Такой директории не существует!')
+            print('This directory does not exist!')
             sys.exit()
 
 
 def ext_files():
     ext_input = {'1': '.html', '2': '.php', '3': '.html и .php'}
-    exf = input('Какие файлы ищем?\n 1 - .html\n 2 - .php\n 3 - .html и .php\n')
+    exf = input('What files are looking for?\n 1 - .html\n 2 - .php\n 3 - .html и .php\n')
     exf = ext_input.get(exf)
     if exf is None:
-        print('Такого пункта меню нет (:')
+        print('Wrong number menu item (:')
         sys.exit()
     else:
         return exf
 
 
 def search_suspicious_code(value):
-    stats_info = [f'В директории {value[1]} найдено {len(value[0])} файлов для проверки.\n']
+    stats_info = [f'In the directory {value[1]} found {len(value[0])} files to check.\n']
     bar = pyprind.ProgBar(len(value[0]), stream=sys.stdout)
     for path in value[0]:
         with open(path, encoding='utf8', mode='r+', errors='ignore') as fr:
@@ -94,11 +94,11 @@ def search_suspicious_code(value):
                             backup_done = (backup_file(path, value[1]))
                             backup_count += 1
                         if path.endswith('php'):
-                            str_in_files[index] = '/*!!!-----------!!! Удаленный код был тут! !!!-----------!!!*/\n'
+                            str_in_files[index] = '/*!!!-----------!!! Suspicious code was here !!!-----------!!!*/\n'
                             suspicious_code_line.append(line_count)
                         else:
                             str_in_files[
-                                index] = '<!-- !!!-----------!!! Удаленный код был тут! !!!-----------!!! -->\n'
+                                index] = '<!-- !!!-----------!!! Suspicious code was here !!!-----------!!! -->\n'
                             suspicious_code_line.append(line_count)
                         suspicious_code += 1
             if suspicious_code != 0:
@@ -107,11 +107,11 @@ def search_suspicious_code(value):
                 for i in str_in_files:
                     fr.write(i)
                 stats_info.append((
-                    f'{suspicious_code} количество удаленных строк в файле {path}\nНомера строк где был удален код {suspicious_code_line}\n{backup_done}\n'))
+                    f'{suspicious_code} number of deleted lines in file {path}\nLine numbers where the code was deleted {suspicious_code_line}\n{backup_done}\n'))
                 suspicious_code = 0
                 backup_count = 0
             else:
-                stats_info.append(f'Подозрительный код в файле {path} не был найден!\n')
+                stats_info.append(f'Suspicious code in file {path} was not found!\n')
         bar.update()
     return stats_info, value[1]
 
@@ -119,7 +119,7 @@ def search_suspicious_code(value):
 def backup_file(path, base_path):
     destination = path + '_backup_file_' + datetime.datetime.now().strftime("%Y_%m_%d_%H-%M-%S")
     shutil.copy(path, destination)
-    return f'Изменяемый файл сохранен как {destination}'
+    return f'Modified file saved as {destination}'
 
 
 def write_stat_in_file(stat):
@@ -128,13 +128,13 @@ def write_stat_in_file(stat):
         with open(path, 'w') as f:
             for i in stat[0]:
                 f.write(i + '\n')
-        print(f'Отчет создан {path}')
+        print(f'Report Created {path}')
     else:
         path = f'{stat[1]}\\stat_{datetime.datetime.now().strftime("%Y_%m_%d_%H-%M-%S")}.txt'
         with open(path, 'w') as f:
             for i in stat[0]:
                 f.write(i + '\n')
-        print(f'Отчет создан {path}')
+        print(f'Report Created {path}')
 
 
 if __name__ == "__main__":
