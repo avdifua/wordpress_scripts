@@ -3,7 +3,7 @@
 Here I will be collecting my own scripts for WordPress.
 These scripts help me to handle the most common problems with sites which working on Linux.
 
-My first scrip suspicious_code_in_wordpress.py
+My first script suspicious_code_in_wordpress.py
 
 This is a simple script for finding text in files.
 But I called this script 'suspicious code in wordpress' because wrote for finding code like this 'eval(base64_decode(' in .html and .php files.
